@@ -77,7 +77,24 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('other-settings', 'Admin\SettingsController@otherSettings')->name('other_settings');
     Route::post('other-settings', 'Admin\SettingsController@updateOtherSettings')->name('update_other_settings');
+
+     Route::get('theme-settings', 'Admin\ThemesController@index')->name('theme_settings');
+    Route::post('theme-settings', 'Admin\ThemesController@store')->name('update_theme_settings');
     /* Dashboard Section */
+
+    /* Module Section */
+    Route::get('module', 'Admin\ModulesController@index')->name('modules');
+    Route::post('modules', 'Admin\ModulesController@store')->name('update_modules');
+    /* Module Section */
+
+    /* Pages Section */
+    Route::get('pages', 'Admin\PagesController@index')->name('pages');
+    Route::get('add-page/{id?}', 'Admin\PagesController@add')->name('add_page');
+    Route::post('store-page', 'Admin\PagesController@store')->name('store_page');
+
+    Route::get('set-sections/{id}', 'Admin\PagesController@setSection')->name('setsection');
+    Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
+    /* Pages Section */
 
     /* elfinder route */
     Route::get('glide/{path}', function($path){

@@ -14,19 +14,11 @@
                     <li class="active">
                         <a href="{{ route('dashboard') }}"> <i class="menu-icon fa fa-dashboard"></i>Dashboard </a>
                     </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-home"></i>Front Page</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-sliders"></i><a href="ui-buttons.html">Slider</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">About Us</a></li>
-                            <li><i class="fa fa-bars"></i><a href="ui-tabs.html">Services</a></li>
-                            <li><i class="fa fa-share-square-o"></i><a href="ui-social-buttons.html">Features</a></li>
-                            <li><i class="fa fa-id-card-o"></i><a href="ui-cards.html">Offer</a></li>
-                            <li><i class="fa fa-image"></i><a href="ui-alerts.html">Gallary</a></li>
-                            <li><i class="fa fa-question-circle"></i><a href="ui-progressbar.html">FAQ</a></li>
-                            <li><i class="fa fa-quote-left"></i><a href="ui-modals.html">Testimonial</a></li>
-                            <li><i class="fa fa-book"></i><a href="ui-switches.html">Blogs</a></li>
-                        </ul>
+                    <li class="">
+                        <a href="{{ route('pages') }}" > <i class="menu-icon fa fa-home"></i>Pages</a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('modules') }}" > <i class="menu-icon fa fa-home"></i>Modules</a>
                     </li>
                     
                     <li class="">

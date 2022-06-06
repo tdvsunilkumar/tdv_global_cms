@@ -43,6 +43,8 @@
                                     <a class="nav-link" id="v-pills-settings-tab"  href="{{ route('email_settings') }}" role="tab" aria-controls="v-pills-settings" aria-selected="false">Email Setting</a>
                                     
                                      <a class="nav-link" id="v-pills-settings-tab"  href="{{ route('other_settings') }}" role="tab" aria-controls="v-pills-settings" aria-selected="false">Other Setting</a>
+
+                                     <a class="nav-link" id="v-pills-settings-tab"  href="{{ route('theme_settings') }}" role="tab" aria-controls="v-pills-settings" aria-selected="false">Theme Setting</a>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +89,7 @@
                                     <label class=" form-control-label">Website Logo (white)</label>
                                     <div class="input-group">
                                         
-                                        <input class="form-control" id="website_logo_white" name="website_logo_white" value="{{ (isset($data['allSettings'])) ? $data['allSettings']['website_logo_white']:'' }}" readonly/>
+                                        <input class="form-control" id="website_logo_white" name="website_logo_white" value="{{ (isset($data['allSettings']['website_logo_white'])) ? $data['allSettings']['website_logo_white']:'' }}" readonly/>
                                         <div class="input-group-addon"><a href="{{ route('elfinder.ckeditor') }}" class="popup_selector" data-inputid="website_logo_white"><i class="fa fa-image">
                                             
                                                 

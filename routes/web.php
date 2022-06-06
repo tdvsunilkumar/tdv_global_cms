@@ -10,15 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => ['forntendmaintainance']], function () { 
+	Route::get('/', 'HomeController@index')->name('home');
+	});
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('under-construction',function(){
+	return view('underconstruction');
 });
 
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+/*Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/upload', 'HomeController@upload');
+Route::get('/upload', 'HomeController@upload');*/

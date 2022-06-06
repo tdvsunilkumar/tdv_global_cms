@@ -28,7 +28,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/admin/dashboard';
-
+    
     /**
      * Create a new controller instance.
      *
@@ -43,6 +43,15 @@ class LoginController extends Controller
      {
     return view('admin.auth.login');
      }
+
+     public function redirectPath()
+    {
+        if (method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+    }
 
      public function login(Request $request)
     {

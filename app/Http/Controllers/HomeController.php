@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Admin\Page;
 
 class HomeController extends Controller
 {
@@ -13,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        parent::__construct();
     }
 
     /**
@@ -23,13 +24,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
-    }
+        $settings = $this->settings;
+        $page = new Page;
+        $pages = $page->where('is_active',1)->where('page_name','home')->get()->first();
+        $data['page']     = $pages;
+        $data['settings'] = $settings;
+        //dd($data);
+        if(!empty($this->themeData)){
+            //Display relevent theme data
+            return view('frontent.Themes.'.$this->themeData['theme_name'].'.index',compact('data'));
+        }else if(isset($this->mapedSettings['']) ){
 
+        }else{
+            //Display blank page with message no theme activated please activate the theme
+            return view('welcome');
 
-    public function upload(Request $request)
-    {
-       dd($request);
+        }
     }
 
     

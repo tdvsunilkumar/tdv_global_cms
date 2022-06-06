@@ -27,6 +27,10 @@ function ajaxSuccess(dataObj, url) {
         if(dataObj.status == 'success'){
         	showalertmessage(dataObj.msg, url);
         }
+        if(dataObj.status == 'error'){
+            showalertmessage(dataObj.msg, '');
+        }
+        
 }
 
 function ajaxError() {

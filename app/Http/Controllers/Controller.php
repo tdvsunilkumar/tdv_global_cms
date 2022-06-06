@@ -6,6 +6,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Admin\Setting;
+use App\Admin\Theme;
+use App\Admin\PageSection;
 
 class Controller extends BaseController
 {
@@ -39,8 +42,40 @@ class Controller extends BaseController
             'USD' => 'USD - United States dollar'
         ];
 
+        public $settings;
+
+        public $themeData = [];
+
+        public $isThemeActive;
+
+        public $mapedSettings;
+
         public function __construct()
         {
-        	# code...
+        	$seeting = new Setting;
+            $settings = $seeting->get()->toArray();
+            $this->settings = $settings;
+            
+            $newSettings = collect($this->settings);
+            
+            $theme = $newSettings->where('name','is_theme_active')->where('value',1);
+            if($theme->isEmpty()){
+                $this->isThemeActive = 0;
+            }else{
+                $themeId = $newSettings->where('name','theme_id')->values();
+                $themeId = (isset($themeId['0']['value']))?$themeId['0']['value']:0;
+                $themeObj = new Theme;
+                $getThemeData = $themeObj->find($themeId)->first()->toArray();
+                if(!empty($getThemeData)){
+                    $this->themeData = $getThemeData;
+
+                }
+                $this->isThemeActive = 1;
+            }
+            
+                $this->mapedSettings = $newSettings->mapWithKeys(function ($item, $key) {
+                         return [$item['name'] => $item['value']];
+                })->toArray();
+                //dd($this->mapedSettings);
         }
 }
