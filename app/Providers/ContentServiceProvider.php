@@ -30,6 +30,9 @@ class ContentServiceProvider extends ServiceProvider
         View::share('image_asset_path',asset(""));
         $controller = new Controller;
         $settings = $controller->mapedSettings;
+        $settings['themeData'] = $controller->themeData;
+        $settings['socialLinks'] = $controller->socialIcons;
+        $settings['menues'] = $controller->menues;
         View::share('globalSettings',$settings);
     }
 }

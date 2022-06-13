@@ -83,8 +83,22 @@ Route::group(['middleware' => ['auth']], function () {
     /* Dashboard Section */
 
     /* Module Section */
-    Route::get('module', 'Admin\ModulesController@index')->name('modules');
+    Route::get('module/{id}', 'Admin\ModulesController@index')->name('modules');
     Route::post('modules', 'Admin\ModulesController@store')->name('update_modules');
+
+    Route::get('custom-modules/{id}', 'Admin\ModulesController@customModule')->name('custom_modules');
+
+    Route::post('save-custom-module', 'Admin\ModulesController@saveCustomModule')->name('save_custom_modules');
+
+    Route::post('auto-save-custom-module/{id}', 'Admin\ModulesController@autoSaveCustomModule')->name('autosavecustommodule');
+
+    Route::get('auto-load-custom-module/{id}', 'Admin\ModulesController@autoLoadCustomModule')->name('autoloadcustommodule');
+
+    Route::get('test-modules', 'Admin\ModulesController@test')->name('test_modules');
+
+    Route::post('upload-fiel-from-frapes', 'Admin\ModulesController@uploadFileGrapes')->name('upload_files_grapes');
+
+    Route::get('select-page', 'Admin\ModulesController@selectPage')->name('select_page');
     /* Module Section */
 
     /* Pages Section */
@@ -94,6 +108,33 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('set-sections/{id}', 'Admin\PagesController@setSection')->name('setsection');
     Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
+
+    Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');
+
+
+
+
+    /* Pages Section */
+
+
+    /* Menues Section */
+    Route::get('menues/{id?}', 'Admin\MenuesController@index')->name('menues');
+    Route::post('menues', 'Admin\MenuesController@store')->name('add_menu');
+
+    Route::get('menue-list', 'Admin\MenuesController@menuList')->name('menue_list');
+
+    Route::get('set-menu-item/{id}', 'Admin\MenuesController@setMenuItem')->name('setmenuitem');
+
+    Route::post('set-menu-item', 'Admin\MenuesController@savemenuItem')->name('savemenuitem');
+    /*Route::get('add-page/{id?}', 'Admin\PagesController@add')->name('add_page');
+    Route::post('store-page', 'Admin\PagesController@store')->name('store_page');
+
+    Route::get('set-sections/{id}', 'Admin\PagesController@setSection')->name('setsection');
+    Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
+
+    Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');*/
+
+
     /* Pages Section */
 
     /* elfinder route */

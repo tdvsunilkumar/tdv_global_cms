@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{ (isset($data['page']->page_title)?$data['page']->page_title: config('app.name', 'Laravel') )}}</title>
+    <title>{{ (isset($data['page']['page_title'])?$data['page']['page_title']: config('app.name', 'Laravel') )}}</title>
     <meta name="description" content="{{ (isset($data['page']->page_description)?$data['page']->page_description: 'description' )}}">
     <meta name="keywords" content="{{ (isset($data['page']->page_keywords)?$data['page']->page_keywords: 'keywords' )}}">
     <meta name="viewport" content="width=device-width, initial-scale=1">

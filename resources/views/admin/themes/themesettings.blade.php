@@ -73,20 +73,30 @@
                                 </div>
                                 <hr>
                                 <div class="card-text text-sm-center">
-                                    <form method="post" id="website_setting_section_form" action="{{ route('update_theme_settings') }}">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{ encrypt($theme['id']) }}">
-                                    <input type="hidden" name="action_type" value="{{ (isset($data['allSettings']['is_theme_active']) && $data['allSettings']['is_theme_active'] == 1)?'deactivate':'activate' }}">
-                                    </form>
+                                   
                                     
-                                    <a href="#"><button type="button" id="activate_theme" class="btn btn-primary btn-sm">{{ (isset($data['allSettings']['is_theme_active']) && $data['allSettings']['is_theme_active'] == 1)?'Deactivate':'Activate' }}</button></a>
-                                
+                                    <a href="#"><button type="button" id="activate_theme_{{ (isset($theme['id']))?$theme['id']:0 }}" data-theme-id="{{ (isset($theme['id']))?$theme['id']:0 }}" class="btn btn-primary btn-sm" data-action-type="{{ (isset($data['allSettings']['is_theme_active']) && $data['allSettings']['is_theme_active'] == 1)?'deactivate':'activate' }}">{{ (isset($data['allSettings']['is_theme_active']) && $data['allSettings']['is_theme_active'] == 1 && isset($theme['id']) && isset($data['allSettings']['theme_id']) && $data['allSettings']['theme_id'] == $theme['id'])?'Deactivate':'Activate' }}</button></a>
+                                    <script type="text/javascript">
+                                                    $('#activate_theme_{{ (isset($theme['id']))?$theme['id']:0 }}').on('click',function(){
+                                                        var themeId = $(this).data('theme-id');
+                                                        var actionType = $(this).data('action-type');
+                                                        $('#activate_theme_form_id_field').val(themeId);
+                                                        $('#activate_theme_form_action_type_field').val(actionType);
+                                                        $('#website_setting_section_form').submit();
+                                                        //alert(id);
+                                                    });
+                                                </script>
 
                                     <a href="{{ $theme['theme_preview_url'] }}" target="_blank"><button type="button" class="btn btn-primary btn-sm">Preview</button></a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                     <form method="post" id="website_setting_section_form" action="{{ route('update_theme_settings') }}">
+                                    @csrf
+                                    <input type="hidden" id="activate_theme_form_id_field" name="id" value="{{ encrypt($theme['id']) }}">
+                                    <input type="hidden" id="activate_theme_form_action_type_field" name="action_type" value="">
+                                    </form>
                     @endforeach
                     @endif
 

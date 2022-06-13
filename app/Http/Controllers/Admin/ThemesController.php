@@ -35,7 +35,7 @@ class ThemesController extends Controller
     	}
     	$dataToSave = [
            'is_theme_active' => $isThemeActive,
-           'theme_id'        => decrypt($request->post('id'))
+           'theme_id'        => $request->post('id')
     	]; 
     	$settingObj = new Setting;
         foreach ($dataToSave as $key => $value) {

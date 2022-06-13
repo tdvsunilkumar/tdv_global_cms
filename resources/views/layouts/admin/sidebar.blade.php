@@ -15,10 +15,13 @@
                         <a href="{{ route('dashboard') }}"> <i class="menu-icon fa fa-dashboard"></i>Dashboard </a>
                     </li>
                     <li class="">
-                        <a href="{{ route('pages') }}" > <i class="menu-icon fa fa-home"></i>Pages</a>
+                        <a href="{{ route('menue_list') }}" > <i class="menu-icon fa fa-bars"></i>Menus</a>
                     </li>
                     <li class="">
-                        <a href="{{ route('modules') }}" > <i class="menu-icon fa fa-home"></i>Modules</a>
+                        <a href="{{ route('pages') }}" > <i class="menu-icon fa fa-file"></i>Pages</a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('select_page') }}" > <i class="menu-icon fa fa-list"></i>Modules</a>
                     </li>
                     
                     <li class="">

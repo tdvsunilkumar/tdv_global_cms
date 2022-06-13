@@ -12,6 +12,8 @@
 */
 Route::group(['middleware' => ['forntendmaintainance']], function () { 
 	Route::get('/', 'HomeController@index')->name('home');
+
+	Route::get('/{slug}', 'HomeController@otherPages')->name('slug_url');
 	});
 
 Route::get('under-construction',function(){

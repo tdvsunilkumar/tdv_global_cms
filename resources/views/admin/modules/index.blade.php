@@ -18,7 +18,7 @@
                        <!--  <ol class="breadcrumb text-right">
                             <li class="active">Dashboard</li>
                         </ol> -->
-                        {{ Breadcrumbs::render('modules') }}
+                        <!-- {{ Breadcrumbs::render('modules') }} -->
                     </div>
                 </div>
             </div>
@@ -31,7 +31,8 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Module Settings</h4>
+                                <!-- <h4>Module Settings</h4> -->
+                                <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#mediumModal">Add Custom Module</button>
                             </div>
                             <div class="card-body">
                                   <div class="animated fadeIn">
@@ -57,7 +58,7 @@
                                     
                                     </form>
                                     
-                                    <a href="#"><button type="button" id="activate_theme" class="btn btn-primary btn-sm">Modify</button></a>
+                                    <a target="_blank" href="{{ route('custom_modules',encrypt($module['id'])) }}"><button type="button" id="activate_theme" class="btn btn-primary btn-sm">Modify</button></a>
                                 </div>
                             </div>
                         </div>
@@ -69,9 +70,46 @@
 
 
         </div> <!-- .content -->
+        <div class="modal fade" id="mediumModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="mediumModalLabel">Add New Module Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="post" id="custom_module_form" action="{{ route('save_custom_modules') }}">
+                                    @csrf
+                            <div class="modal-body">
+                               <div class="form-group"><label for="website_title" class=" form-control-label">Module Name</label>
+                                
+                                <input type="text" name="module_name" id="module_name" class="form-control"  >
+                                        <span class="validation_error" id="module_name_error"></span>
+
+                                                    </div>
+                                
+                                <div class="form-group"><label for="website_title" class=" form-control-label">Module Description</label>
+                                
+                                <textarea name="module_description" class="form-control"></textarea>
+                                        <span class="validation_error" id="module_description_error"></span>
+
+                                                    </div>                    
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="save_custom_module_data" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
     @endsection
     @section('script')
     <script type="text/javascript">
+        $('#save_custom_module_data').on('click',function(){
+            $('#custom_module_form').submit();
+        });
 $('#website_setting_section_form').on('submit',function(e){
     loadspinner();
     $('.validation_error').html('');
@@ -79,13 +117,34 @@ $('#website_setting_section_form').on('submit',function(e){
     var data = $(this).serialize();
     console.log(data);
     $.ajax({
-      url: $(this).data('url'),
+      url: $(this).attr('action'),
       type:"POST",
       data:data,
       success:function(response){
         hidespinner();
         var newResponse = JSON.parse(response);
         ajaxSuccess(newResponse, '{{ route("currency_settings") }}');
+      },
+      error: function(response) {
+        ajaxError();
+      },
+      });
+    });
+
+   $('#custom_module_form').on('submit',function(e){
+    loadspinner();
+    $('.validation_error').html('');
+    e.preventDefault();
+    var data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      url: $(this).attr('action'),
+      type:"POST",
+      data:data,
+      success:function(response){
+        hidespinner();
+        var newResponse = JSON.parse(response);
+        ajaxSuccess(newResponse, '{{ route("modules",encrypt($data["page"]->id)) }}');
       },
       error: function(response) {
         ajaxError();

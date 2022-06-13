@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="links">
-                    <h1>No theme activated please login to Admin Panel and select your theme</h1>
+                    <h1>{{ (isset($data['msg']))?$data['msg']:'welcome to '.config('app.name', 'Laravel') }}</h1>
                     <a href="{{ route('login') }}" target="_blank">Admin Login</a>
                 </div>
             </div>

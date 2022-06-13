@@ -45,15 +45,34 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        @if(!empty($data['pageSection']))
+                                        @foreach($data['pageSection'] as $pagesection)
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            
+                                            <td>{{ (isset($pagesection['selected_page']['page_name'])?$pagesection['selected_page']['page_name']:'') }}</td>
+                                            <td>{{ (isset($pagesection['section']['module_name'])?$pagesection['section']['module_name']:'') }}</td>
+                                            <td>{{ (isset($pagesection['sort'])?$pagesection['sort']:'') }}</td>
+                                            <td><!-- <a href="#/" id="delete_section_button"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <button id="delete_section_button"><i class="fa fa-trash"></i></button>
+                                                <script type="text/javascript">
+                                                    $('#delete_section_button').on('click',function(){
+                                                        $('#delete_section_form').submit();
+
+                                                    });
+                                                </script> -->
+                                                <a href="#" data-moduleid="{{ (isset($pagesection['id'])?$pagesection['id']:'') }}" id="delete_section_button_{{ (isset($pagesection['id'])?$pagesection['id']:'') }}"><i class="fa fa-trash"></i></a>
+                                                <script type="text/javascript">
+                                                    $('#delete_section_button_{{ (isset($pagesection['id'])?$pagesection['id']:'') }}').on('click',function(){
+                                                        var id = $(this).data('moduleid');
+                                                        $('#delete_destion_id_field').val(id);
+                                                        $('#delete_section_form').submit();
+                                                        //alert(id);
+                                                    });
+                                                </script>
+
+                                            </td>
                                         </tr>
-                                       
+                                       @endforeach
+                                       @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -63,7 +82,11 @@
 
                 </div>
             </div><!-- .animated -->
-
+<form id="delete_section_form" method="post" action="{{ route('deletesection') }}">
+                                                    @csrf
+                                                    <input type="hidden" id="delete_destion_id_field" name="id" value="">
+                                                    
+                                                </form>
 
         </div> <!-- .content -->
         <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
@@ -98,7 +121,7 @@
     @endsection
     @section('script')
     <script type="text/javascript">
-$('#website_setting_section_form').on('submit',function(e){
+    $('#website_setting_section_form').on('submit',function(e){
     loadspinner();
     $('.validation_error').html('');
     e.preventDefault();
@@ -111,7 +134,32 @@ $('#website_setting_section_form').on('submit',function(e){
       success:function(response){
         hidespinner();
         var newResponse = JSON.parse(response);
-        ajaxSuccess(newResponse, '');
+        ajaxSuccess(newResponse, '{{ route("setsection",encrypt($data["page"]->id)) }}');
+
+      },
+      error: function(response) {
+        ajaxError();
+      },
+      });
+    });
+  </script>
+  <script type="text/javascript">
+$('#delete_section_form').on('submit',function(e){
+    //alert();
+    loadspinner();
+    $('.validation_error').html('');
+    e.preventDefault();
+    var data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      url: $(this).attr('action'),
+      type:"POST",
+      data:data,
+      success:function(response){
+        hidespinner();
+        var newResponse = JSON.parse(response);
+        ajaxSuccess(newResponse, '{{ route("setsection",encrypt($data["page"]->id)) }}');
+
       },
       error: function(response) {
         ajaxError();

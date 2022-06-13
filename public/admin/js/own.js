@@ -14,7 +14,7 @@ function showalertmessage(msg, url) {
     	if(url != ''){
     		window.location.href = url;
     	}
-    	 }, 3000);
+    	 }, 1500);
 	
 }
 
@@ -37,3 +37,5 @@ function ajaxError() {
 	hidespinner();
         showalertmessage('Server Error, Please Try again', '');
 }
+
+

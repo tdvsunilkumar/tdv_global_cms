@@ -118,23 +118,29 @@ class PagesController extends Controller
     	} catch (\Exception $e) {
     		return redirect()->route('pages');
     	}
+    	$pageSectionObj = new PageSection;
+    	$selectedSections = $pageSectionObj->with('section','selectedPage')->where('page_id',$id)->get()->toArray();
+    	//dd($selectedSections);
     	$pageObj = new Page;
     	$data['page'] = $pageObj->where('id',$id)->get()->first();
     	$modulObj = new Module;
     	$data['modules'] = $modulObj->pluck('module_name','id')->toArray();
-    	//dd($data);
+    	$data['pageSection'] = $selectedSections;
     	return view('admin.pages.setsection', compact("data"));
     }
 
     public function storeSection (Request $request)
     {
+    	$pageSectionObj = new PageSection;
+    	$getNumberOfSection = $pageSectionObj->where('page_id',$request->post('page_id'))->get()->count();
+    	//dd($getNumberOfSection);
     	$dataTosave = [
     		'page_id'    => $request->post('page_id'),
     		'section_id' => $request->post('section_id'),
     		'is_active'  => 1,
-    		'sort'       => 1
+    		'sort'       => (int)($getNumberOfSection+1)
     	];
-    	$pageSectionObj = new PageSection;
+    	
     	try {
     		$pageSectionObj->create($dataTosave);
     		$response = [
@@ -149,5 +155,26 @@ class PagesController extends Controller
     	}
 
     	return json_encode($response);
+    }
+
+    public function deleteSection (Request $request)
+    {
+        $id = $request->post('id');
+        $pageSecObj = new PageSection;
+        try {
+            $pageSecObj->where('id', $id)->delete();
+            $response = [
+                'status' => 'success',
+                'msg'    => 'Section removed from page successfully!'
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ];
+        }
+
+        return json_encode($response);
+        
     }
 }

@@ -26,18 +26,45 @@ class HomeController extends Controller
     {
         $settings = $this->settings;
         $page = new Page;
-        $pages = $page->where('is_active',1)->where('page_name','home')->get()->first();
+        $pages = $page->where('is_active',1)->where('page_name','home')->with('pagesections.section.value')->get()->first()->toArray();
         $data['page']     = $pages;
         $data['settings'] = $settings;
         //dd($data);
-        if(!empty($this->themeData)){
+        if(!empty($this->themeData) && !empty($pages
+        )){
             //Display relevent theme data
             return view('frontent.Themes.'.$this->themeData['theme_name'].'.index',compact('data'));
-        }else if(isset($this->mapedSettings['']) ){
-
+        }else if($data['page'] == null) {
+            $data['msg'] = 'Please create a page with name "home" from admin panel';
+            return view('welcome',compact('data'));
         }else{
             //Display blank page with message no theme activated please activate the theme
-            return view('welcome');
+            $data['msg'] = 'No theme activated please login to Admin Panel and select your theme';
+            return view('welcome',compact('data'));
+
+        }
+    }
+
+
+    public function otherPages ($slug ='')
+    {
+        $settings = $this->settings;
+        $page = new Page;
+        $pages = $page->where('is_active',1)->where('page_slug',$slug)->with('pagesections.section.value')->get()->first()->toArray();
+        $data['page']     = $pages;
+        $data['settings'] = $settings;
+        //dd($data);
+        if(!empty($this->themeData) && !empty($pages
+        )){
+            //Display relevent theme data
+            return view('frontent.Themes.'.$this->themeData['theme_name'].'.index',compact('data'));
+        }else if($data['page'] == null) {
+            $data['msg'] = 'Please create a page with name "home" from admin panel';
+            return view('welcome',compact('data'));
+        }else{
+            //Display blank page with message no theme activated please activate the theme
+            $data['msg'] = 'No theme activated please login to Admin Panel and select your theme';
+            return view('welcome',compact('data'));
 
         }
     }
