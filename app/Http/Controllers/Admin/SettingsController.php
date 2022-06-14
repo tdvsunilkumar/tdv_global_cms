@@ -45,6 +45,7 @@ class SettingsController extends Controller
         	'website_desc'        => $request->website_desc,
         	'website_keywords'    => $request->website_keywords,
         	'website_title'       => $request->website_title,
+            'site_url'            => $request->site_url
         ];
         $settingObj = new Setting;
         foreach ($dataToSave as $key => $value) {

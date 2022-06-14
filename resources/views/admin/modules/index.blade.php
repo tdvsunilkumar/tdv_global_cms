@@ -81,6 +81,7 @@
                             </div>
                             <form method="post" id="custom_module_form" action="{{ route('save_custom_modules') }}">
                                     @csrf
+                            <input type="hidden" name="page_id" value="{{ (isset($data['page']->id))?$data['page']->id:0 }}">        
                             <div class="modal-body">
                                <div class="form-group"><label for="website_title" class=" form-control-label">Module Name</label>
                                 

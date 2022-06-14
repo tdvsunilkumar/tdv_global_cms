@@ -14,8 +14,7 @@ function showalertmessage(msg, url) {
     	if(url != ''){
     		window.location.href = url;
     	}
-    	 }, 1500);
-	
+    	 }, 3000);	
 }
 
 function ajaxSuccess(dataObj, url) {

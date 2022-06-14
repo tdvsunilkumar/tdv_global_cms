@@ -108,15 +108,11 @@ Route::group(['middleware' => ['auth']], function () {
     /*------------------------DeletePage------------------------------*/
     Route::post('delete-page', 'Admin\PagesController@deletePage')->name('deletepage');
 
-    Route::get('set-page/{id}', 'Admin\PagesController@setPage')->name('setpage');
 
     Route::get('set-sections/{id}', 'Admin\PagesController@setSection')->name('setsection');
     Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
 
     Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');
-
-
-
 
 
     /* Pages Section */

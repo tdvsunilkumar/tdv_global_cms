@@ -19,7 +19,7 @@ class PagesController extends Controller
     public function index($value='')
     {
     	$pageObj = new Page;
-    	$pageData = $pageObj->get();
+    	$pageData = $pageObj->where('theme_id',$this->themeId)->get();
     	$data['pages'] = $pageData;
     	return view('admin.pages.index', compact("data"));
     }
@@ -41,6 +41,16 @@ class PagesController extends Controller
 
     public function store(Request $request)
     {
+        //dd();
+        if($this->isThemeActive == 0){
+            $response = [
+                     'status' =>'error',
+                     'msg'    => 'No theme selected yet, Please visit to setting page and select your theme!'
+                ];
+            return  json_encode($response);    
+        }
+
+
     	if($request->post('id') != ''){
     		$pageNameVa = 'required|unique:pages,page_name,'.$request->post('id');
     		$pageSlug   = 'required|unique:pages,page_slug,'.$request->post('id');
@@ -66,12 +76,13 @@ class PagesController extends Controller
         }
         
         $dataToSave = [
-        	'page_name' => $request->post('page_name'),
-        	'page_title' =>$request->post('page_title'),
+        	'page_name'        => $request->post('page_name'),
+        	'page_title'       =>$request->post('page_title'),
         	'page_description' =>$request->post('page_description'),
-        	'page_keywords' =>$request->post('page_keywords'),
-        	'page_slug' => str_slug($request->post('page_slug')),
-        	'is_active' => $request->post('is_active')
+        	'page_keywords'    =>$request->post('page_keywords'),
+        	'page_slug'        => str_slug($request->post('page_slug')),
+        	'is_active'        => $request->post('is_active'),
+            'theme_id'         => $request->post('theme_id')
         ];
         $pageObj = new Page;
         $dataAfterSave = $pageObj->find($request->post('id'));
@@ -124,7 +135,7 @@ class PagesController extends Controller
     	$pageObj = new Page;
     	$data['page'] = $pageObj->where('id',$id)->get()->first();
     	$modulObj = new Module;
-    	$data['modules'] = $modulObj->pluck('module_name','id')->toArray();
+    	$data['modules'] = $modulObj->where('page_id',$id)->pluck('module_name','id')->toArray();
     	$data['pageSection'] = $selectedSections;
     	return view('admin.pages.setsection', compact("data"));
     }
@@ -177,6 +188,7 @@ class PagesController extends Controller
         return json_encode($response);
         
     }
+
 
     public function deletePage(Request $request)
     {

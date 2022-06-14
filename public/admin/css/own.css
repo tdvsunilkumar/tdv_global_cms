@@ -21,7 +21,7 @@
 }
 #toast {
     visibility: hidden;
-    max-width: 50px;
+    max-width: 750px;
     height: 50px;
     /*margin-left: -125px;*/
     margin: auto;
@@ -81,20 +81,20 @@
 
 @-webkit-keyframes expand {
     from {min-width: 50px} 
-    to {min-width: 350px}
+    to {min-width: 750px}
 }
 
 @keyframes expand {
     from {min-width: 50px}
-    to {min-width: 350px}
+    to {min-width: 750px}
 }
 @-webkit-keyframes stay {
-    from {min-width: 350px} 
-    to {min-width: 350px}
+    from {min-width: 50px} 
+    to {min-width: 750px}
 }
 
 @keyframes stay {
-    from {min-width: 350px}
+    from {min-width: 50px}
     to {min-width: 350px}
 }
 @-webkit-keyframes shrink {

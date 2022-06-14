@@ -66,7 +66,6 @@
                                                         //alert(id);
                                                     });
                                                 </script>
-
                                         </td>
                                             <td><a href="{{ route('setsection',encrypt($page['id'])) }}"><button>Section Settings</button></a></td>
                                         </tr>
@@ -84,9 +83,7 @@
 <form id="delete_page_form" method="post" action="{{ route('deletepage') }}">
                                                     @csrf
                                                     <input type="hidden" id="delete_destion_id_field" name="id" value="">
-                                                    
                                                 </form>
-
 
         </div> <!-- .content -->
     @endsection
