@@ -25,14 +25,11 @@ class ModulesController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('select_page');
         }
-        //echo $id;exit;
-
     	$moduleObj = new Module;
         $pageObj = new Page;
-    	$moduleData = $moduleObj/*->where('page_id',$id)*/->get();
+    	$moduleData = $moduleObj->where('page_id',$id)->get();
         $data['page']    = $pageObj->where('id',$id)->get()->first();
     	$data['modules'] = $moduleData;
-       // dd($data);
     	return view('admin.modules.index', compact("data"));
     }
 
@@ -52,6 +49,7 @@ class ModulesController extends Controller
 
     public function saveCustomModule(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'module_name'     => 'required|unique:modules',
             'module_description' =>'required'
@@ -71,6 +69,8 @@ class ModulesController extends Controller
             'module_description' => $request->post('module_description'),
             'module_image' =>'Modules/default_module_image.png',
             'module_type' =>'custom',
+            'page_id'     => $request->post('page_id'),
+            'theme_id'    => 0
         ];
         $pageObj = new Module;
             try {
@@ -186,21 +186,19 @@ class ModulesController extends Controller
 
     public function uploadFileGrapes (Request $request)
     {
-        //echo url('/files/');
         $path = public_path('files/');
         $files = $request->file('files');
         $fileData = [];
         foreach ($files as $file) {
-           // dd($file);
-            //echo $file->getClientOriginalName();
             $filename = $file->getClientOriginalName();
             $tmp_name = $file->getPathname();
             if(!file_exists("$path/$filename")){
                 move_uploaded_file($tmp_name, "$path/$filename");
             }
+            $websiteUrl = (isset($this->mapedSettings['site_url']) && $this->mapedSettings['site_url'] != '')?$this->mapedSettings['site_url']:url('/');
             $img = 
                 [
-                    'src'    => url('/files').'/'.$filename,
+                    'src'    => $websiteUrl.'/files/'.$filename,
                     'type'   => $file->getClientOriginalExtension(),
                     'height' => 100,
                     'width'  => 200

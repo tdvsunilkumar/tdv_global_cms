@@ -69,6 +69,12 @@
                                         <span class="validation_error" id="website_name_error"></span>
 
                                     </div>
+
+                                    <div class="form-group"><label for="vat" class=" form-control-label">Website URL</label>
+                                        <input type="text" name="site_url" id="website_name" class="form-control" value="{{ (isset($data['allSettings']['site_url'])) ? $data['allSettings']['site_url']:'' }}" >
+                                        <span class="validation_error" id="site_url_error"></span>
+
+                                    </div>
                                         <div class="form-group"><label for="website_desc" class=" form-control-label">Website Description</label>
                                             <textarea name="website_desc" id="street"  class="form-control">{{ (isset($data['allSettings']['website_desc'])) ? $data['allSettings']['website_desc']:'' }}</textarea>
                                             <span class="validation_error" id="website_desc_error"></span>

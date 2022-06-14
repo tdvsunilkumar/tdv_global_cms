@@ -2,7 +2,7 @@
 
 @section('content')  
         <!-- Header-->
-        <?php //dd($data['allSettings']['is_maintenance_mode']); ?>
+        <?php //dd($globalSettings['theme_id']); ?>
         
         <div class="breadcrumbs">
             <div class="col-sm-4">
@@ -35,13 +35,13 @@
                                 <h4>Add New Page</h4>
                             </div>
                             <div class="card-body">
-                                 <form method="post" id="website_setting_section_form" action="{{ route('store_page') }}">
+                                   <form method="post" id="website_setting_section_form" action="{{ route('store_page') }}">
                                     @csrf
+                                   <input type="hidden" name="theme_id" value="{{ isset($globalSettings['theme_id'])?$globalSettings['theme_id']:0 }}">
                                    <input type="hidden" name="id" value="{{ (isset($data['page']['id'])) ? $data['page']['id']:'' }}">
-                                    <div class="form-group"><label for="vat" class=" form-control-label">Page Name</label>
+                                   <div class="form-group"><label for="vat" class=" form-control-label">Page Name</label>
                                         <input type="text" name="page_name" id="page_name" class="form-control" value="{{ (isset($data['page']['page_name'])) ? $data['page']['page_name']:'' }}" >
                                         <span class="validation_error" id="page_name_error"></span>
-
                                     </div>
 
                                     <div class="form-group"><label for="vat" class=" form-control-label">Page Title</label>
