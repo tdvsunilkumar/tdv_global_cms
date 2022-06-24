@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Select Page to add new module</h1>
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                        <!--  <ol class="breadcrumb text-right">
                             <li class="active">Dashboard</li>
                         </ol> -->
-                        {{ Breadcrumbs::render('pages') }}
+                        {{ Breadcrumbs::render('select_page') }}
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                                             <td>{{ $page['page_name'] }}</td>
                                             <td>{{ $page['page_title'] }}</td>
                                             
-                                            <td><a href="{{ route('modules',encrypt($page['id'])) }}"><button>Manage</button></a></td>
+                                            <td><a href="{{ route('modules',encrypt($page['id'])) }}"><button class="btn btn-info">Manage This page's Module</button></a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>

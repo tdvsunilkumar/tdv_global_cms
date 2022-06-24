@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Admin\Page;
+use App\Admin\Blog;
 
 class HomeController extends Controller
 {
@@ -26,7 +27,7 @@ class HomeController extends Controller
     {
         $settings = $this->settings;
         $page = new Page;
-        $pages = $page->where('is_active',1)->where('page_name','home')->with('pagesections.section.value')->get()->first()->toArray();
+        $pages = $page->where('is_active',1)->where('page_name','home')->where('theme_id',$this->themeId)->with('pagesections.section.value')->get()->first()->toArray();
         $data['page']     = $pages;
         $data['settings'] = $settings;
         //dd($data);
@@ -50,22 +51,45 @@ class HomeController extends Controller
     {
         $settings = $this->settings;
         $page = new Page;
-        $pages = $page->where('is_active',1)->where('page_slug',$slug)->with('pagesections.section.value')->get()->first()->toArray();
-        $data['page']     = $pages;
+        $pages = $page->where('is_active',1)->where('page_slug',$slug)->where('theme_id',$this->themeId)->with('pagesections.section.value')->get()->first();
+        //dd($pages);
+        $data['page']     = ($pages == null)?[]:$pages->toArray();
         $data['settings'] = $settings;
-        //dd($data);
         if(!empty($this->themeData) && !empty($pages
         )){
-            //Display relevent theme data
-            return view('frontent.Themes.'.$this->themeData['theme_name'].'.index',compact('data'));
+            if(isset($pages->page_name) && $pages->page_name == 'blog'){
+                $blogObj = new Blog;
+                $blogData = $blogObj->where('theme_id',$this->themeId)->simplePaginate(10);
+                $data['blogs'] = $blogData;
+                //dd($data);
+                return view('frontent.Themes.'.$this->themeData['theme_name'].'.blog',compact('data'));
+            }else{
+                return view('frontent.Themes.'.$this->themeData['theme_name'].'.other_pages',compact('data'));
+            }
+            
         }else if($data['page'] == null) {
-            $data['msg'] = 'Please create a page with name "home" from admin panel';
-            return view('welcome',compact('data'));
+            $data['msg'] = '404 Error';
+            return view('frontent.Themes.'.$this->themeData['theme_name'].'.404',compact('data'));
         }else{
             //Display blank page with message no theme activated please activate the theme
             $data['msg'] = 'No theme activated please login to Admin Panel and select your theme';
             return view('welcome',compact('data'));
 
+        }
+    }
+
+
+    public function detailBlog($slug ='')
+    {
+        $blogobj = new Blog;
+        $blogDetail = $blogobj->where('blog_slug',$slug)->where('theme_id',$this->themeId)->get()->first();
+        $data['blog'] = $blogDetail;
+        $featuredBlogs = $blogobj->where('theme_id',$this->themeId)->where('id','!=',$blogDetail->id)->where('is_feature',1)->get();
+        $data['featuredBlog'] = $featuredBlogs;
+        if($blogDetail != null){
+            return view('frontent.Themes.'.$this->themeData['theme_name'].'.blog_details',compact('data'));
+        }else{
+            return redirect(route('slug_url','blogs'));
         }
     }
 

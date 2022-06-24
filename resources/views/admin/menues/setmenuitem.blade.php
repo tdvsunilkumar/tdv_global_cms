@@ -329,6 +329,8 @@
 
 #json-output {
   margin-top: 20px;
+}.text-right {
+    text-align: center !important;
 }
 
     </style>
@@ -336,7 +338,7 @@
     <div class="container" style="background-color: #eee; height: 100vh;">
 
       <h1 class="text-center">Menu Design</h1>
-
+{{ Breadcrumbs::render('set_menu') }}
       <div class="row">
         
         <div class="col-md-3">

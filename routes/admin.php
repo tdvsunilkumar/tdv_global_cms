@@ -55,6 +55,12 @@ Route::post('register', [
 
 Route::group(['middleware' => ['auth']], function () { 
 
+    /* User Section */
+    Route::get('edit-user', 'Admin\UsersController@index')->name('edit_user_profile');
+    Route::post('edit-user', 'Admin\UsersController@update')->name('update_user');
+    
+    /* User Section */
+
     /* Dashboard Section */
     Route::get('dashboard', 'Admin\DashboardController@index')->name('dashboard');
     /* Dashboard Section */
@@ -113,7 +119,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
 
     Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');
-
+    Route::post('make-clone', 'Admin\PagesController@makeClone')->name('clone');
 
     /* Pages Section */
 
@@ -127,16 +133,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('set-menu-item/{id}', 'Admin\MenuesController@setMenuItem')->name('setmenuitem');
 
     Route::post('set-menu-item', 'Admin\MenuesController@savemenuItem')->name('savemenuitem');
-    /*Route::get('add-page/{id?}', 'Admin\PagesController@add')->name('add_page');
-    Route::post('store-page', 'Admin\PagesController@store')->name('store_page');
-
-    Route::get('set-sections/{id}', 'Admin\PagesController@setSection')->name('setsection');
-    Route::post('set-sections', 'Admin\PagesController@storeSection')->name('storesection');
-
-    Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');*/
-
-
+    Route::post('delete-menu', 'Admin\MenuesController@deleteMenu')->name('deletemenu');
     /* Pages Section */
+
+    /* Blogs Section */
+    Route::get('blogs', 'Admin\BlogsController@index')->name('blogs');
+
+    Route::get('create-blog/{id?}', 'Admin\BlogsController@create')->name('create_blog');
+
+    Route::post('create-blog', 'Admin\BlogsController@store')->name('store_blog');
+
+    Route::post('delete-blog', 'Admin\BlogsController@destroy')->name('delete_blog');
+    /* Blogs Section */
 
     /* elfinder route */
     Route::get('glide/{path}', function($path){

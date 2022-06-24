@@ -18,7 +18,7 @@
                        <!--  <ol class="breadcrumb text-right">
                             <li class="active">Dashboard</li>
                         </ol> -->
-                        <!-- {{ Breadcrumbs::render('modules') }} -->
+                       {{ Breadcrumbs::render('add_module') }}
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <!-- <h4>Module Settings</h4> -->
-                                <button type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#mediumModal">Add Custom Module</button>
+                                <button type="button" class="btn btn-success mb-1" data-toggle="modal" data-target="#mediumModal">Add Custom Module</button>
                             </div>
                             <div class="card-body">
                                   <div class="animated fadeIn">

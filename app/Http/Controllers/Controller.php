@@ -43,6 +43,10 @@ class Controller extends BaseController
             'USD' => 'USD - United States dollar'
         ];
 
+        public $defaultPages = [
+            'home','about','contact','blog'
+        ];
+
         public $settings;
 
         public $themeData = [];
@@ -95,7 +99,7 @@ class Controller extends BaseController
                 $this->socialIcons = $socialIcon;
                 $menuObj = new Menu;
                 $menues = $menuObj->get();
-                $this->menues = $menues->mapWithKeys(function ($item, $key) {
+                $this->menues = $menues->where('theme_id',$this->themeId)->mapWithKeys(function ($item, $key) {
                          return [$item['menu_location'] => json_decode($item['menu_data'],0)];
                 })->toArray();
                 //dd($this->menues);

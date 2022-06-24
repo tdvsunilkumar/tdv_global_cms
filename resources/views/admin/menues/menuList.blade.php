@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Create your Menu</h1>
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                        <!--  <ol class="breadcrumb text-right">
                             <li class="active">Dashboard</li>
                         </ol> -->
-                        {{ Breadcrumbs::render('pages') }}
+                        {{ Breadcrumbs::render('menu') }}
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a href="{{ route('menues') }}"><button>Add New</button></a>
+                                <a href="{{ route('menues') }}"><button class="btn btn-success">Add New Menu</button></a>
                             </div>
                             <div class="card-body">
                                 <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
@@ -50,8 +50,19 @@
                                             <td>{{ $page['menu_name'] }}</td>
                                             <td>{{ $page['menu_location'] }}</td>
                                             
-                                            <td><a href="{{ route('menues',encrypt($page['id'])) }}"><i class="fa fa-edit"></i></a> <a href=""><i class="fa fa-trash"></i></a></td>
-                                            <td><a target="_blank" href="{{ route('setmenuitem',encrypt($page['id'])) }}"><button>Set</button></a></td>
+                                            <td><a href="{{ route('menues',encrypt($page['id'])) }}"><i class="fa fa-edit"></i></a>
+                                             <a href="#" data-menuid="{{ (isset($page['id'])?$page['id']:'') }}" id="delete_menu_button_{{ (isset($page['id'])?$page['id']:'') }}"><i class="fa fa-trash"></i></a>
+                                         <script type="text/javascript">
+                                                    $('#delete_menu_button_{{ (isset($page['id'])?$page['id']:'') }}')
+                                                    .on('click',function(){
+                                                        //alert('data');
+                                                        var id = $(this).data('menuid');
+                                                        $('#delete_menu_id_field').val(id);
+                                                        $('#delete_menu_form').submit();
+                                                        //alert(id);
+                                                    });
+                                                </script></td>
+                                            <td><a  href="{{ route('setmenuitem',encrypt($page['id'])) }}"><button class="btn btn-danger">Adjust Menu Items</button></a></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -66,6 +77,10 @@
 
 
         </div> <!-- .content -->
+        <form id="delete_menu_form" method="post" action="{{ route('deletemenu') }}">
+                                                    @csrf
+                                                    <input type="hidden" id="delete_menu_id_field" name="id" value="">
+                                                </form>
     @endsection
     @section('script')
     <script type="text/javascript">
@@ -83,6 +98,32 @@ $('#website_setting_section_form').on('submit',function(e){
         hidespinner();
         var newResponse = JSON.parse(response);
         ajaxSuccess(newResponse, '{{ route("currency_settings") }}');
+      },
+      error: function(response) {
+        ajaxError();
+      },
+      });
+    });
+  </script>
+  <script type="text/javascript">
+$('#delete_menu_form').on('submit',function(e){
+     var result = window.confirm('Are you sure, you want to delete this record?');
+     if(result == false){
+        return false;
+     }
+     loadspinner();
+    $('.validation_error').html('');
+    e.preventDefault();
+    var data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      url: $(this).attr('action'),
+      type:"POST",
+      data:data,
+      success:function(response){
+        hidespinner();
+        var newResponse = JSON.parse(response);
+        ajaxSuccess(newResponse, '{{ route("menue_list") }}');
       },
       error: function(response) {
         ajaxError();

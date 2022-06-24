@@ -241,9 +241,9 @@
                 <div class="row clearfix">
                     
                     <!--Column-->
-                    <div class="column col-lg-3 col-md-6">
+                    <div class="column col-lg-4 col-md-6">
                         <div class="widget about-widget">
-                            <div class="logo"><a href="index.html"><img src="assets/images/logo-2.png" alt=""></a></div>
+                            <div class="logo"><a href="{{ route('home') }}"><img src="{{$image_asset_path.(isset($globalSettings['website_logo_white'])?$globalSettings['website_logo_white']:'')}}" alt=""></a></div>
                             <div class="text">{{ (isset($globalSettings['website_desc'])?$globalSettings['website_desc']: '' )}}</div>
                             <ul class="social-links">
                                 @if(isset($globalSettings['socialLinks']) && !empty($globalSettings['socialLinks']))
@@ -258,7 +258,7 @@
                     </div>
                     
                     <!--Column-->
-                    <div class="column col-lg-3 col-md-6">
+                    <!-- <div class="column col-lg-3 col-md-6">
                         <div class="widget newsletter-widget">
                             <h3 class="widget-title">Newsletter Signup</h3>
                             <div class="widget-content">
@@ -274,27 +274,54 @@
                                 </div>     
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!--Column-->
-                    <div class="column col-lg-3 col-md-6">
+                    <div class="column col-lg-4 col-md-6">
                         <div class="widget links-widget">
                             <h3 class="widget-title">Our Courses</h3>
                             <div class="widget-content">
                                 <ul>
-                                    <li><a href="#">Learn To Drive Slowly</a></li>
-                                    <li><a href="#">Courses For Adults</a></li>
-                                    <li><a href="#">Lessons For Teens</a></li>
-                                    <li><a href="#">Highway Driving Course</a></li>
-                                    <li><a href="#">For International Drivers</a></li>
-                                    <li><a href="#">Automatic Car Lessons</a></li>
+                                    @if(isset($globalSettings['menues']['Footer']) && !empty($globalSettings['menues']['Footer']))
+                                            @foreach($globalSettings['menues']['Footer'] as $item)
+                                            @if($item->deleted != 1)
+                                            <li ><a href="{{ ($item->slug == 'home')?route('home'):route('slug_url',$item->slug) }}">{{ ucfirst($item->name)}}</a>
+                                                @if(isset( $item->children) && !empty($item->children) )
+                                            <ul>
+                                                @foreach($item->children as $child)
+                                                <li ><a href="{{ ($child->slug == 'home')?route('home'):route('slug_url',$child->slug) }}">{{ ucfirst($child->name) }}</a>
+                                                    @if(isset( $child->children) && !empty($child->children) )
+                                                    <ul>
+                                                        @foreach($child->children as $subchild)
+                                                        <li ><a href="{{ ($subchild->slug == 'home')?route('home'):route('slug_url',$subchild->slug) }}">{{ ucfirst($subchild->name) }}</a>
+                                                        @if(isset($subchild->children) && !empty($subchild->children))
+                                                        <ul>
+                                                            @foreach($subchild->children as $subchildren)
+                                                            <li><a href="{{ ($subchildren->slug == 'home')?route('home'):route('slug_url',$subchildren->slug) }}">{{ ucfirst($subchildren->name) }}</a>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                        @endif
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
+
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endif
+                                        </li>
+                                            @endif
+                                            @endforeach
+                                        @endif
                                 </ul>                                        
                             </div>
                         </div>
                     </div>
                     
                     <!--Column-->
-                    <div class="column col-lg-3 col-md-6">
+                    <div class="column col-lg-4 col-md-6">
                         <div class="widget contact-widget">
                             <h3 class="widget-title">Contact Us</h3>
                             <div class="widget-content">

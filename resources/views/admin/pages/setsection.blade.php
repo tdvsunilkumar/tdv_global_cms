@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Decorate your Page with Inbuilt sections</h1>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <a type="button" class="btn btn-secondary mb-1" data-toggle="modal" data-target="#largeModal"><button>Add New Section to Page</button></a>
+                                <a  data-toggle="modal" data-target="#largeModal"><button class="btn btn-danger">Add New Section to Page</button></a>
                             </div>
                             <div class="card-body">
                                 <table id="bootstrap-data-table-export" class="table table-striped table-bordered">

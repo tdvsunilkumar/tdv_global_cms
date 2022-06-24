@@ -12,9 +12,22 @@ class Module extends Model
     {
     	$controller = new Controller;
     	$themeId = (isset($controller->themeData['id']))?$controller->themeData['id']:0;
-    	
     	return $this->hasOne(ModuleValue::class,'module','id')->where('theme_id',$themeId);
     }
+
+    public function pagesection($value='')
+    {	
+    	return $this->hasOne(PageSection::class,'section_id');
+    }
+
+   /* protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($model) {
+        	//dd($model);
+        	$model->value()->delete();
+        });
+    }*/
 
     
 }

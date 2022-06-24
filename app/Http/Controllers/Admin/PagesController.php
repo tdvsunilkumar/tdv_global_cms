@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Admin\Page;
 use App\Admin\Module;
+use App\Admin\ModuleValue;
 use App\Admin\PageSection;
 use Validator;
+use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class PagesController extends Controller
 {
@@ -21,6 +24,7 @@ class PagesController extends Controller
     	$pageObj = new Page;
     	$pageData = $pageObj->where('theme_id',$this->themeId)->get();
     	$data['pages'] = $pageData;
+        $data['defaultPages'] = $this->defaultPages;
     	return view('admin.pages.index', compact("data"));
     }
 
@@ -36,6 +40,7 @@ class PagesController extends Controller
     	}
     	
     	$data['page'] = $dataAfterSave;
+        $data['defaultPages'] = $this->defaultPages;
     	return view('admin.pages.add', compact("data"));
     }
 
@@ -50,13 +55,36 @@ class PagesController extends Controller
             return  json_encode($response);    
         }
 
-
+        $pageName = $request->post('page_name');
+        $pageSlug = $request->post('page_slug');
+        $themeId  = $this->themeId;
     	if($request->post('id') != ''){
-    		$pageNameVa = 'required|unique:pages,page_name,'.$request->post('id');
-    		$pageSlug   = 'required|unique:pages,page_slug,'.$request->post('id');
+    		/*$pageNameVa = 'required|unique:pages,page_name,'.$request->post('id');
+    		$pageSlug   = 'required|unique:pages,page_slug,'.$request->post('id');*/
+            $pageId = $request->post('id');
+            $pageNameVa = [
+               'required',
+                Rule::unique('pages')->ignore($pageId)->where(function ($query) use ($pageName, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })];
+            $pageSlug = [
+               'required',
+                Rule::unique('pages')->ignore($pageId)->where(function ($query) use ($pageSlug, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })];
     	}else{
-    		$pageNameVa = 'required|unique:pages';
-    		$pageSlug   = 'required|unique:pages';
+    		/*$pageNameVa = 'required|unique:pages';
+    		$pageSlug   = 'required|unique:pages';*/
+            $pageNameVa = [
+               'required',
+                Rule::unique('pages')->where(function ($query) use ($pageName, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })];
+            $pageSlug = [
+               'required',
+                Rule::unique('pages')->where(function ($query) use ($pageSlug, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })];    
     	}
     	$validator = Validator::make($request->all(), [
             'page_name'     => $pageNameVa,
@@ -86,6 +114,12 @@ class PagesController extends Controller
         ];
         $pageObj = new Page;
         $dataAfterSave = $pageObj->find($request->post('id'));
+        $previousPagename = $dataAfterSave->getOriginal('page_name');
+        $previousPageslug = $dataAfterSave->getOriginal('page_slug');
+        if(in_array($previousPagename,$this->defaultPages)){
+            $dataToSave['page_name'] = $dataAfterSave->getOriginal('page_name');
+            $dataToSave['page_slug'] = $dataAfterSave->getOriginal('page_slug');
+        }
         if($dataAfterSave == null){
             try {
             	$pageObj->create($dataToSave);
@@ -194,9 +228,10 @@ class PagesController extends Controller
     {
         //dd('deletePage');
         $id = $request->post('id');
+        //dd($id);
         $pageSecObj = new Page;
         try {
-            $pageSecObj->where('id', $id)->delete();
+            $pageSecObj->find($id)->delete();
             $response = [
                 'status' => 'success',
                 'msg'    => 'Page removed successfully!'
@@ -208,6 +243,88 @@ class PagesController extends Controller
             ];
         }
 
+        return json_encode($response);
+    }
+
+    public function makeClone(Request $request)
+    {
+        if($this->isThemeActive == 0){
+            $response = [
+                     'status' =>'error',
+                     'msg'    => 'No theme selected yet, Please visit to setting page and select your theme!'
+                ];
+            return  json_encode($response);    
+        }
+        $themeId  = $this->themeId;
+        $pageId = $request->post('id');
+        $pageObj = new Page;
+        $module  = new Module;
+        $moduleValue  = new ModuleValue;
+        $pageSection = new PageSection;
+        $pageData = $pageObj->with(['modules.value','modules.pagesection'])->where('id',$pageId)->get()->first();
+        /* Create a new Page */
+        $newPageName = $pageData->page_name." page clone ".Carbon::now();
+        $newPageData = [
+            'page_name'          => $newPageName,
+            'page_title'         => $pageData->page_title,
+            'page_description'   => $pageData->page_description,
+            'page_keywords'      => $pageData->page_keywords,
+            'is_active'          => 0,
+            'page_slug'          => str_slug($newPageName,'-'),
+            'theme_id'           => $themeId,
+        ];
+        try {
+            //dd($pageData->modules->toArray());
+            $newPageObj = $pageObj->create($newPageData);
+            if(!$pageData->modules->isEmpty()){
+                foreach ($pageData->modules as $module) {
+                    $dataToSave = [
+                        'module_name' => $module->module_name,
+                        'module_code' => $module->module_code,
+                        'module_description' => $module->module_description,
+                        'module_image' => $module->module_image,
+                        'module_type' => $module->module_type,
+                        'page_id' => $newPageObj->id,
+                        'theme_id' => 0
+
+                    ];
+                    //dd($newPageObj->modules);
+                    $newModuleObj = $module->updateOrCreate(['module_name'=>$module->module_name,'page_id'=>$newPageObj->id],$dataToSave);
+                    if(isset($module->value) && $module->value != null){
+                    $moduleValueData = [
+                        'module' => $newModuleObj->id,
+                        'value' => $module->value->value,
+                        'default_value' => $module->value->default_value,
+                        'theme_id' => $module->value->theme_id
+
+                    ];
+                    $moduleValue->create($moduleValueData);
+                }
+
+                if(isset($module->pagesection) && $module->pagesection != null){
+                    $pageSectionData = [
+                        'page_id' => $newPageObj->id,
+                        'section_id' => $newModuleObj->id,
+                        'is_active' => 1,
+                        'sort' => $module->pagesection->sort
+
+                    ];
+                    $pageSection->create($pageSectionData);
+                }
+                }
+
+        }
+                    $response = [
+                'status' => 'success',
+                'msg'    => 'Clone Page created successfully!'
+            ];
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ];
+        }
+        
         return json_encode($response);
     }
 }

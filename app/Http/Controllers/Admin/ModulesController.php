@@ -10,6 +10,7 @@ use App\Admin\ModuleValue;
 use App\Admin\Page;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\UrlGenerator;
+use Illuminate\Validation\Rule;
 
 class ModulesController extends Controller
 {
@@ -49,9 +50,12 @@ class ModulesController extends Controller
 
     public function saveCustomModule(Request $request)
     {
+        $pageId = $request->post('page_id');
 
         $validator = Validator::make($request->all(), [
-            'module_name'     => 'required|unique:modules',
+            'module_name'     => ['required',Rule::unique('modules')->where(function($query) use ($pageId){
+                 return $query->where('page_id',$pageId);
+            })],
             'module_description' =>'required'
         ]);
         if ($validator->fails()) {

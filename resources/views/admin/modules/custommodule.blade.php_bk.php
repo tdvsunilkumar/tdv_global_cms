@@ -146,6 +146,11 @@
           blockCategories: {
             // ...
           },
+          sections: {
+
+          },blockCategories: {
+            // ...
+          },
           labels: {
             // ...
           },
@@ -245,7 +250,7 @@
         }
     });
     editor.Panels.removeButton('options', 'undo');
-
+    
       const am = editor.AssetManager;
       am.getConfig().params = {'_token':'{{ csrf_token() }}'};
     </script>

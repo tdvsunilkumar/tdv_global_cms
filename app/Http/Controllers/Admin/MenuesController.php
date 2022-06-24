@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use App\Admin\Menu;
 use App\Admin\Page;
+use Illuminate\Validation\Rule;
 
 class MenuesController extends Controller
 {
@@ -31,10 +32,30 @@ class MenuesController extends Controller
 
     public function store(Request $request)
     {
+        //dd(Rule::unique('menues')->ignore(10));
+        if($this->isThemeActive == 0){
+            $response = [
+                     'status' =>'error',
+                     'msg'    => 'No theme selected yet, Please visit to setting page and select your theme!'
+                ];
+            return  json_encode($response);    
+        }
+        $menuName = $request->post('menu_name');
+        $menu_id =  $request->post('id');
+        $themeId = $this->themeId;
     	if($request->post('id') != ''){
-    		$menuNameVa = 'required|unique:menues,menu_name,'.$request->post('id');
+            $menuNameVa = [
+               'required',
+                Rule::unique('menues')->ignore($menu_id)->where(function ($query) use ($menuName, $menu_id, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })
+            ];
     	}else{
-    		$menuNameVa = 'required|unique:menues';
+    		$menuNameVa = [
+               'required',
+                Rule::unique('menues')->where(function ($query) use ($menuName, $menu_id, $themeId){
+                    return $query->where('theme_id',$themeId);
+                })];
     	}
     	$validator = Validator::make($request->all(), [
             'menu_name'     => $menuNameVa,
@@ -52,6 +73,7 @@ class MenuesController extends Controller
         $dataToSave = [
         	'menu_name' => $request->post('menu_name'),
         	'menu_location' =>$request->post('menu_location'),
+            'theme_id'      => $themeId
         ];
         $menuObj = new Menu;
         $dataAfterSave = $menuObj->find($request->post('id'));
@@ -95,7 +117,7 @@ class MenuesController extends Controller
     public function menuList ($value='')
     {
     	$menuObj = new Menu;
-    	$menuData = $menuObj->get();
+    	$menuData = $menuObj->where('theme_id',$this->themeId)->get();
     	$data['menues'] = $menuData;
     	return view('admin.menues.menuList', compact("data"));
     }
@@ -110,7 +132,7 @@ class MenuesController extends Controller
     		return redirect()->route('menue_list');
     	}
         $pageObj = new Page;
-        $pages = $pageObj->where('is_active',1)->pluck('page_name','page_slug')->toArray();
+        $pages = $pageObj->where('is_active',1)->where('theme_id',$this->themeId)->pluck('page_name','page_slug')->toArray();
         $data['menu']  = $menuObj->where('id',$id)->get()->first();
         
         $data['pages'] = $pages;
@@ -142,6 +164,27 @@ class MenuesController extends Controller
     	}
 
     	return json_encode($response);
+    }
+
+    public function deleteMenu (Request $request)
+    {
+        $id = $request->post('id');
+        //dd($id);
+        $pageSecObj = new Menu;
+        try {
+            $pageSecObj->find($id)->delete();
+            $response = [
+                'status' => 'success',
+                'msg'    => 'Menu removed successfully!'
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ];
+        }
+
+        return json_encode($response);
     }
 
 

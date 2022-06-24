@@ -8,7 +8,7 @@
             <div class="col-sm-4">
                 <div class="page-header float-left">
                     <div class="page-title">
-                        <h1>Dashboard</h1>
+                        <h1>Create your Menu</h1>
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                        <!--  <ol class="breadcrumb text-right">
                             <li class="active">Dashboard</li>
                         </ol> -->
-                        {{ Breadcrumbs::render('add_page') }}
+                        {{ Breadcrumbs::render('add_menu') }}
                     </div>
                 </div>
             </div>
