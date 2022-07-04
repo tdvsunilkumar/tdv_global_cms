@@ -28,7 +28,7 @@
     <link href="{{$frontend_asset_path}}Themes/driving/assets/css/color.css" rel="stylesheet">
 
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
-
+    <script src="{{$frontend_asset_path}}Themes/driving/assets/js/jquery.js"></script>
     <!-- Responsive CSS -->
 
 </head>
@@ -374,12 +374,13 @@
 <!--End pagewrapper-->
 
 <!--Scroll to top-->
+@yield('script')
 <div class="scroll-to-top scroll-to-target" data-target="html"><span class="flaticon-right-arrow-4"></span></div>
     <!-- Body main wrapper end -->
 
     <!-- ::::::::::::::All JS Files here :::::::::::::: -->
     <!-- Global Vendor, plugins JS -->
-<script src="{{$frontend_asset_path}}Themes/driving/assets/js/jquery.js"></script>
+
 <script src="{{$frontend_asset_path}}Themes/driving/assets/js/popper.min.js"></script>
 <script src="{{$frontend_asset_path}}Themes/driving/assets/js/bootstrap.min.js"></script>
 <script src="{{$frontend_asset_path}}Themes/driving/assets/js/bootstrap-select.min.js"></script>

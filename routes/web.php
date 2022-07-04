@@ -13,9 +13,20 @@
 Route::group(['middleware' => ['forntendmaintainance']], function () { 
 	Route::get('/', 'HomeController@index')->name('home');
 
+    Route::get('privacy-policy',function(){
+    	//dd($globalSettings);
+    	$data = [
+           'pagename'=>'Privacy Policy'
+    	];
+	return view('documents',compact('data'));
+       });
+
 	Route::get('/{slug}', 'HomeController@otherPages')->name('slug_url');
 
 	Route::get('/blogs/{slug}', 'HomeController@detailBlog')->name('full_blog');
+
+	Route::post('/contact-us', 'HomeController@sendEmailContact')->name('contact_us_send_email');
+
 	});
 
 Route::get('under-construction',function(){

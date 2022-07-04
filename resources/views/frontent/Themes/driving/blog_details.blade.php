@@ -2,7 +2,7 @@
 
 $themeName = (isset($globalSettings['themeData']['theme_name']))?$globalSettings['themeData']['theme_name']:'';
 
-$view = "frontent.Themes.".$themeName.".Modules.";
+$view = "frontent.themes.".$themeName.".Modules.";
 $blogTags = (isset($data['blog']['blog_tags']))?$data['blog']['blog_tags']:'';
 $blogTags = explode(",",$blogTags);
 ?>

@@ -55,10 +55,17 @@
                                     <form method="post" id="website_setting_section_form" action="{{ route('update_modules') }}">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ encrypt($module['id']) }}">
-                                    
                                     </form>
-                                    
                                     <a target="_blank" href="{{ route('custom_modules',encrypt($module['id'])) }}"><button type="button" id="activate_theme" class="btn btn-primary btn-sm">Modify</button></a>
+
+                                    <a data-module_id="{{ $module['id'] }}" data-toggle="modal" data-target="#largeModal" id="set_for_other_page_{{ $module['id'] }}" href="#"><button type="button" id="set_for_other_page" class="btn btn-success btn-sm">Set For Other Page</button></a>
+                                    <script type="text/javascript">
+                                        $('#set_for_other_page_{{ $module["id"] }}').on('click',function(){
+                                            var moduleId = $(this).data('module_id');
+                                            $('input[name=set_for_other_page_module_id]').val(moduleId);
+                                            //alert(moduleId);
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>
@@ -102,6 +109,36 @@
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                 </form>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="largeModalLabel">Add Section For other Page</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" id="set_section_for_other_page" action="{{ route('set_module_for_other_page') }}">
+                                    @csrf
+                                <input type="hidden" name="set_for_other_page_module_id" value="">
+
+                                                    <div class="form-group"><label for="website_title" class=" form-control-label">Select Page</label>
+                                                        {!! Form::select('page_id',$data['pages'],'',['class'=>'form-control']) !!}
+                                                        <span class="validation_error" id="page_id_error"></span>
+
+                                                    </div>
+                            </div>
+                        
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -152,5 +189,27 @@ $('#website_setting_section_form').on('submit',function(e){
       },
       });
     });
+
+   $('#set_section_for_other_page').on('submit',function(e){
+    loadspinner();
+    $('.validation_error').html('');
+    e.preventDefault();
+    var data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      url: $(this).attr('action'),
+      type:"POST",
+      data:data,
+      success:function(response){
+        hidespinner();
+        var newResponse = JSON.parse(response);
+        ajaxSuccess(newResponse, '{{ route("modules",encrypt($data["page"]->id)) }}');
+      },
+      error: function(response) {
+        ajaxError();
+      },
+      });
+    });
   </script>
     @endsection
+    

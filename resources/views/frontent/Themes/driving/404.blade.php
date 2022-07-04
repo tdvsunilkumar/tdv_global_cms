@@ -1,7 +1,7 @@
 <?php 
 $themeName = (isset($globalSettings['themeData']['theme_name']))?$globalSettings['themeData']['theme_name']:'';
 
-$view = "frontent.Themes.".$themeName.".Modules.";
+$view = "frontent.themes.".$themeName.".Modules.";
 ?>
 @extends('frontent.themes.'.$themeName.'.layouts.main')
 @section('content')

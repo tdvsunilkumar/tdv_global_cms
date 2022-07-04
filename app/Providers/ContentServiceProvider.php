@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\URL;
 
 class ContentServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,9 @@ class ContentServiceProvider extends ServiceProvider
         $settings['themeData'] = $controller->themeData;
         $settings['socialLinks'] = $controller->socialIcons;
         $settings['menues'] = $controller->menues;
+        $settings['oldimgbaseurl'] = 'http://localhost/sweet_shop/public';
+        $settings['newimgbaseurl'] = URL::to('/');
+        //dd($settings);
         View::share('globalSettings',$settings);
     }
 }

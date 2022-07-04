@@ -93,7 +93,10 @@
     @endsection
     @section('script')
     <script type="text/javascript">
-        CKEDITOR.replace( 'policy_content' );
+
+        CKEDITOR.replace( 'policy_content',{
+            extraPlugins:'justify'
+        } );
         CKEDITOR.replace( 'terms_content' );
 $('#website_setting_section_form').on('submit',function(e){
     loadspinner();

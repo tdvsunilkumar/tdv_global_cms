@@ -39,6 +39,7 @@
 
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{$frontend_asset_path}}Themes/bcare/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 
@@ -65,49 +66,47 @@
                                 <!-- Start Mainmenu -->
                                 <nav class="mainmenu__nav">
                                     <ul class="main__menu">
-                                        <li class="drop"><a href="{{ route('home') }}">home</a>
+                                        @if(isset($globalSettings['menues']['Header']) && !empty($globalSettings['menues']['Header']))
+                                            @foreach($globalSettings['menues']['Header'] as $item)
+                                            @if($item->deleted != 1)
+                                            <li class="{{ (isset( $item->children))?'drop':'' }}"><a  href="{{ ($item->slug == 'home')?route('home'):route('slug_url',$item->slug) }}">{{ ucfirst($item->name)}}</a>
+                                                @if(isset( $item->children) && !empty($item->children) )
                                             <ul class="dropdown">
-                                                <li><a href="index-animation-text-1.html">animation text 1</a></li>
+                                                @foreach($item->children as $child)
+                                                <li class="{{ (isset( $child->children))?'drop':'' }}"><a  href="{{ ($child->slug == 'home')?route('home'):route('slug_url',$child->slug) }}">{{ ucfirst($child->name) }}</a>
+                                                    @if(isset( $child->children) && !empty($child->children) )
+                                                    <ul class="dropdown">
+                                                        @foreach($child->children as $subchild)
+                                                        <li class="{{ (isset( $subchild->children))?'drop':'' }}"><a  href="{{ ($subchild->slug == 'home')?route('home'):route('slug_url',$subchild->slug) }}">{{ ucfirst($subchild->name) }}</a>
+                                                        @if(isset($subchild->children) && !empty($subchild->children))
+                                                        <ul class="dropdown">
+                                                            @foreach($subchild->children as $subchildren)
+                                                            <li><a  href="{{ ($subchildren->slug == 'home')?route('home'):route('slug_url',$subchildren->slug) }}">{{ ucfirst($subchildren->name) }}</a>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                        @endif
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
+
+                                                </li>
+                                                @endforeach
                                             </ul>
+                                            @endif
                                         </li>
-                                        <li><a href="gallery.html">gallery</a></li>
-                                        <li><a href="about.html">about us</a></li>
-                                        <li class="drop"><a href="#">pages</a>
-                                            <ul class="dropdown">
-                                                <li><a href="blog-list.html">blog list</a></li>
-                                                <li><a href="blog-details.html">blog details</a></li>
-                                                <li><a href="shop-grid.html">shop grid</a></li>
-                                                <li><a href="shop-list.html">shop list</a></li>
-                                                <li><a href="product-details.html">Product details</a></li>
-                                                <li><a href="team.html">team</a></li>
-                                                <li><a href="team-details.html">team details</a></li>
-                                                <li><a href="service.html">service</a></li>
-                                                <li><a href="cart.html">cart</a></li>
-                                                <li><a href="wishlist.html">wishlist</a></li>
-                                                <li><a href="appoinment.html">appoinment</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="drop"><a href="product-details.html">shop</a>
-                                            <ul class="dropdown">
-                                                <li><a href="shop-grid.html">shop grid</a></li>
-                                                <li><a href="shop-list.html">shop list</a></li>
-                                                <li><a href="product-details.html">Product details</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="contact.html">contact us</a></li>
+                                            @endif
+                                            @endforeach
+                                        @endif
+                                        
                                     </ul>
                                 </nav>
                                 <!-- End Mainmenu -->
                             </div>
-                            <div class="col-lg-1 col-md-2 position-relative">
-                                <div class="cart__search">
-                                    <ul class="cart__search__list">
-                                        <li class="cart__menu"><a href="#"><i class="zmdi zmdi-shopping-cart"></i></a>
-                                            <span class="badge--cart">2</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- Start Shopping basket -->
+                            <!-- <div class="col-lg-1 col-md-2 position-relative">
+                                
+                      
                                 <div class="dropdown__shopping__basket">
                                     <div class="shopping__basket_notices d-flex justify-content-between">
                                         <em class="color main-font">Your Total item (02)</em>
@@ -131,7 +130,7 @@
                                                     <a class="btn-edit" href="#">edit</a>
                                                 </div>
                                             </li>
-                                            <!-- single item -->
+                                      
                                             <li>
                                                 <a class="shopping-image" href="single-product.html">
                                                     <img alt="images" src="images/product/sm-img/1.png">
@@ -148,7 +147,7 @@
                                                     <a class="btn-edit" href="#">edit</a>
                                                 </div>
                                             </li>
-                                            <!-- single item -->
+                                            
                                         </ul>
                                         <div class="top-subtotal">
                                             Subtotal: <span class="sig-price">$444.00</span>
@@ -158,8 +157,8 @@
                                         </div>
                                     </div>                                            
                                 </div>
-                                <!-- End Shopping basket -->
-                            </div>
+                            
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -221,7 +220,7 @@
                     <div class="footer__container">
                         <div class="row mt--40">
                             <!--Start Single Footer wrap -->
-                            <div class="col-lg-3 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12">
                                 <div class="single__footer__widget">
                                     <h2 class="footer-title">Contact Us</h2>
                                     <div class="footer__details">
@@ -260,57 +259,35 @@
                             </div>
                             <!--End Single Footer wrap -->
                             <!--Start Single Footer wrap -->
-                            <div class="col-lg-3 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12">
                                 <div class="single__footer__widget our--links">
                                     <h2 class="footer-title">Quick links</h2>
                                     <ul class="footer-menu">
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>About Us</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Our History</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Medicine Management</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Doctor’s Forum</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>News</a></li>
+                                         @if(isset($globalSettings['menues']['Footer']) && !empty($globalSettings['menues']['Footer']))
+                                            @foreach($globalSettings['menues']['Footer'] as $item)
+                                            @if($item->deleted != 1)
+                                            <li ><a  href="{{ ($item->slug == 'home')?route('home'):route('slug_url',$item->slug) }}"><i class="zmdi zmdi-caret-right"></i>{{ ucfirst($item->name)}}</a>
+                                        </li>
+                                            @endif
+                                            @endforeach
+                                        @endif
+                                        
                                     </ul>
                                 </div>
                             </div>
                             <!--End Single Footer wrap -->
                             <!--Start Single Footer wrap -->
-                            <div class="col-lg-3 col-md-6 col-12">
+                            <div class="col-lg-4 col-md-6 col-12">
                                 <div class="single__footer__widget useful--links">
                                     <h2 class="footer-title">Useful Links</h2>
                                     <ul class="footer-menu">
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Special Services</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Sitemap</a></li>
                                         <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Privacy Policy</a></li>
-                                        <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Surgery</a></li>
                                         <li><a href="#"><i class="zmdi zmdi-caret-right"></i>Terms of Services</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <!--End Single Footer wrap -->
-                            <!--Start Single Footer wrap -->
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="single__footer__widget newsletter">
-                                    <h2 class="footer-title">Email Newsletters</h2>
-                                    <div class="newsletter__area">
-                                        <p>Lorem ipsum dolor sit amet, consecttui us adip isicing elit, sed do edunt.</p>
-                                        
-                                        <div id="mc_embed_signup">
-                                            <form action="http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-                                                <div id="mc_embed_signup_scroll">
-                                                    <div class="footer__input">
-                                                        <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email Address" required>
-                                                    </div>
-                                                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                                                    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_6bbb9b6f5827bd842d9640c82_05d85f18ef" tabindex="-1" value=""></div>
-                                                    <div class="clearfix subscribe__btn"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="bst__btn btn--white__color"></div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <!--End Single Footer wrap -->
+                            
                         </div>
                     </div>
                 </div>
@@ -323,14 +300,17 @@
                         <div class="col-12">
                             <div class="footer__bottom">
                                 <div class="ft__btm__inner">
-                                    <p>Copyright © 2021 <a href="https://themeforest.net/user/salmonthemes">SalmonThemes</a>All Right Reserved.</p>
+                                    <p>Copyright © 2021 <a href="https://numerogen.com">Numerogen</a>All Right Reserved.</p>
                                 </div>
                                 <ul class="ft__btm__social__icon">
-                                    <li><a href="#/"><i class="zmdi zmdi-dribbble"></i></a></li>
-                                    <li><a href="#/"><i class="zmdi zmdi-pinterest"></i></a></li>
-                                    <li><a href="#/"><i class="zmdi zmdi-twitter"></i></a></li>
-                                    <li><a href="#/"><i class="zmdi zmdi-instagram"></i></a></li>
-                                    <li><a href="#/"><i class="zmdi zmdi-facebook"></i></a></li>
+                                    @if(isset($globalSettings['socialLinks']) && !empty($globalSettings['socialLinks']))
+                                @foreach($globalSettings['socialLinks'] as $icon => $link)
+                                @if($link != '')
+                                <li ><a href="{{ $link }}"><i class="fa {{ $icon }}"></i></a></li>
+                                @endif
+                                @endforeach
+                                @endif
+                                    
                                 </ul>
                             </div>
                         </div>

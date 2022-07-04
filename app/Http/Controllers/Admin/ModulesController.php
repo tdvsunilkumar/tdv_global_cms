@@ -8,6 +8,7 @@ use App\Admin\Module;
 use Validator;
 use App\Admin\ModuleValue;
 use App\Admin\Page;
+use App\Admin\PageSection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Validation\Rule;
@@ -31,6 +32,8 @@ class ModulesController extends Controller
     	$moduleData = $moduleObj->where('page_id',$id)->get();
         $data['page']    = $pageObj->where('id',$id)->get()->first();
     	$data['modules'] = $moduleData;
+        $pages = $pageObj->where('is_active',1)->where('theme_id',$this->themeId)->pluck('page_name','id')->toArray();
+        $data['pages'] = $pages;
     	return view('admin.modules.index', compact("data"));
     }
 
@@ -218,5 +221,35 @@ class ModulesController extends Controller
         $pageData = $pageObj->where('is_active',1)->where('theme_id',$this->themeId)->get();
         $data['pages'] = $pageData;
         return view('admin.modules.selectpage', compact("data"));
+    }
+
+    public function setModuleForOtherPage (Request $request)
+    {
+        $pageId   = $request->post('page_id');
+        $moduleId = $request->post('set_for_other_page_module_id');
+        $pageSectionObj = new PageSection;
+        $getNumberOfSection = $pageSectionObj->where('page_id',$pageId)->get()->count();
+        //dd($getNumberOfSection);
+        $dataTosave = [
+            'page_id'    => $pageId,
+            'section_id' => $moduleId,
+            'is_active'  => 1,
+            'sort'       => (int)($getNumberOfSection+1)
+        ];
+        
+        try {
+            $pageSectionObj->create($dataTosave);
+            $response = [
+                'status' => 'success',
+                'msg'    => 'Section successfully added for other page!'
+            ];
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ];
+        }
+
+        return json_encode($response);
     }
 }

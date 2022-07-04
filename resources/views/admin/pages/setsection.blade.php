@@ -50,7 +50,18 @@
                                         <tr>
                                             <td>{{ (isset($pagesection['selected_page']['page_name'])?$pagesection['selected_page']['page_name']:'') }}</td>
                                             <td>{{ (isset($pagesection['section']['module_name'])?$pagesection['section']['module_name']:'') }}</td>
-                                            <td>{{ (isset($pagesection['sort'])?$pagesection['sort']:'') }}</td>
+                                            <td><input id="update_sort_field_{{ (isset($pagesection['section']['id'])?$pagesection['section']['id']:'') }}" name="update_sort_field" value="{{ (isset($pagesection['sort'])?$pagesection['sort']:'') }}" />&nbsp;<button class="update_sort_{{ (isset($pagesection['section']['id'])?$pagesection['section']['id']:'') }}" data-module_id="{{ (isset($pagesection['id'])?$pagesection['id']:'') }}">Update</button>
+                                                <script type="text/javascript">
+                                                    $(".update_sort_{{ (isset($pagesection['section']['id'])?$pagesection['section']['id']:'') }}").on('click',function(){
+                                                        var moduleId = $(this).data('module_id');
+                                                        var sortData = $("#update_sort_field_{{ (isset($pagesection['section']['id'])?$pagesection['section']['id']:'') }}").val();
+                                                        $('#update_sort_module_id_field').val(moduleId);
+                                                        $('#update_sort_sort_field').val(sortData);
+                                                        $('#update_sort_form').submit();
+                                                    });
+                                                </script>
+
+                                            </td>
                                             <td><!-- <a href="#/" id="delete_section_button"><i class="fa fa-trash"></i></a> -->
                                                 <!-- <button id="delete_section_button"><i class="fa fa-trash"></i></button>
                                                 <script type="text/javascript">
@@ -87,7 +98,11 @@
                                                     <input type="hidden" id="delete_destion_id_field" name="id" value="">
                                                     
                                                 </form>
-
+<form id="update_sort_form" method="post" action="{{ route('update_sort_field') }}">
+                                                    @csrf
+                                                    <input type="hidden" id="update_sort_sort_field" name="sort" value="">
+                                                    <input type="hidden" id="update_sort_module_id_field" name="page_section_id" value="">
+                                                </form>
         </div> <!-- .content -->
         <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
@@ -122,6 +137,28 @@
     @section('script')
     <script type="text/javascript">
     $('#website_setting_section_form').on('submit',function(e){
+    loadspinner();
+    $('.validation_error').html('');
+    e.preventDefault();
+    var data = $(this).serialize();
+    console.log(data);
+    $.ajax({
+      url: $(this).attr('action'),
+      type:"POST",
+      data:data,
+      success:function(response){
+        hidespinner();
+        var newResponse = JSON.parse(response);
+        ajaxSuccess(newResponse, '{{ route("setsection",encrypt($data["page"]->id)) }}');
+
+      },
+      error: function(response) {
+        ajaxError();
+      },
+      });
+    });
+
+    $('#update_sort_form').on('submit',function(e){
     loadspinner();
     $('.validation_error').html('');
     e.preventDefault();

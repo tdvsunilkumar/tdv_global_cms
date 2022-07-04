@@ -1,7 +1,8 @@
 <?php 
+//dd($globalSettings);
 $themeName = (isset($globalSettings['themeData']['theme_name']))?$globalSettings['themeData']['theme_name']:'';
 
-$view = "frontent.Themes.".$themeName.".Modules.";
+$view = "frontent.themes.".$themeName.".Modules.";
 ?>
 @extends('frontent.themes.'.$themeName.'.layouts.main')
 @section('content')
@@ -11,9 +12,10 @@ $view = "frontent.Themes.".$themeName.".Modules.";
 @if(isset($section['section']['value']['value']))
 <?php 
     $viewData = (array)json_decode($section['section']['value']['value']);
-    echo $viewData['gjs-html'];
+    //echo $viewData['gjs-html'];
+    echo str_replace($globalSettings['oldimgbaseurl'],$globalSettings['newimgbaseurl'],$viewData['gjs-html']);
 ?>
-<style type="text/css"><?php echo $viewData['gjs-css'] ?></style>
+<style type="text/css"><?php echo str_replace($globalSettings['oldimgbaseurl'],$globalSettings['newimgbaseurl'],$viewData['gjs-css']) ?></style>
 @endif
 @endforeach 
 @endif

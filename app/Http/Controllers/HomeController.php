@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Admin\Page;
 use App\Admin\Blog;
+use Validator;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -34,7 +36,7 @@ class HomeController extends Controller
         if(!empty($this->themeData) && !empty($pages
         )){
             //Display relevent theme data
-            return view('frontent.Themes.'.$this->themeData['theme_name'].'.index',compact('data'));
+            return view('frontent.themes.'.$this->themeData['theme_name'].'.index',compact('data'));
         }else if($data['page'] == null) {
             $data['msg'] = 'Please create a page with name "home" from admin panel';
             return view('welcome',compact('data'));
@@ -61,15 +63,16 @@ class HomeController extends Controller
                 $blogObj = new Blog;
                 $blogData = $blogObj->where('theme_id',$this->themeId)->simplePaginate(10);
                 $data['blogs'] = $blogData;
-                //dd($data);
-                return view('frontent.Themes.'.$this->themeData['theme_name'].'.blog',compact('data'));
+                $recentBlogs = $blogObj->where('theme_id',$this->themeId)->orderBy('id','DESC')->limit(3)->get();
+        $data['recentBlogs'] = $recentBlogs;
+                return view('frontent.themes.'.$this->themeData['theme_name'].'.blog',compact('data'));
             }else{
                 return view('frontent.Themes.'.$this->themeData['theme_name'].'.other_pages',compact('data'));
             }
             
         }else if($data['page'] == null) {
             $data['msg'] = '404 Error';
-            return view('frontent.Themes.'.$this->themeData['theme_name'].'.404',compact('data'));
+            return view('frontent.themes.'.$this->themeData['theme_name'].'.404',compact('data'));
         }else{
             //Display blank page with message no theme activated please activate the theme
             $data['msg'] = 'No theme activated please login to Admin Panel and select your theme';
@@ -92,6 +95,27 @@ class HomeController extends Controller
             return redirect(route('slug_url','blogs'));
         }
     }
+
+
+    public function sendEmailContact(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'     => 'required',
+            'email'     => 'required|email',
+            'subject'    => 'required',
+        ]);
+        if ($validator->fails()) {
+            $validationErrors =  $validator->errors();
+            $res = [
+              'status'   =>'validation_error',
+              'data'     =>$validationErrors
+            ];
+            return  json_encode($res);
+        }
+        $res = $this->sendEmail(['subject'=>'New Customer Query through Contact Form'],'frontent.email.contact_form',['data'=>$request->post()]);
+        return $res;
+    }
+
 
     
 }

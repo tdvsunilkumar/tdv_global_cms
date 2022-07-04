@@ -105,6 +105,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('upload-fiel-from-frapes', 'Admin\ModulesController@uploadFileGrapes')->name('upload_files_grapes');
 
     Route::get('select-page', 'Admin\ModulesController@selectPage')->name('select_page');
+
+    Route::post('set-module-for-other-page', 'Admin\ModulesController@setModuleForOtherPage')->name('set_module_for_other_page');
     /* Module Section */
 
     /* Pages Section */
@@ -120,6 +122,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('delete-sections', 'Admin\PagesController@deleteSection')->name('deletesection');
     Route::post('make-clone', 'Admin\PagesController@makeClone')->name('clone');
+
+    Route::post('update-sort-field', 'Admin\PagesController@updateSortField')->name('update_sort_field');
 
     /* Pages Section */
 

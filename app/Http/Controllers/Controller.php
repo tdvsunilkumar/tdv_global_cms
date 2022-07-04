@@ -10,6 +10,8 @@ use App\Admin\Setting;
 use App\Admin\Theme;
 use App\Admin\PageSection;
 use App\Admin\Menu;
+use Mail;
+use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
@@ -63,6 +65,7 @@ class Controller extends BaseController
 
         public function __construct()
         {
+            //dd(public_path());
         	$seeting = new Setting;
             $settings = $seeting->get()->toArray();
             $this->settings = $settings;
@@ -102,7 +105,40 @@ class Controller extends BaseController
                 $this->menues = $menues->where('theme_id',$this->themeId)->mapWithKeys(function ($item, $key) {
                          return [$item['menu_location'] => json_decode($item['menu_data'],0)];
                 })->toArray();
-                //dd($this->menues);
+                //dd($this->mapedSettings);
+                config()->set('mail.driver','smtp');
+                config()->set('mail.host',(isset($this->mapedSettings['smtp_server']))?$this->mapedSettings['smtp_server']:config('mail.host'));
+                config()->set('mail.port',(isset($this->mapedSettings['smtp_port']))?$this->mapedSettings['smtp_port']:config('mail.port'));
+                config()->set('mail.from.address',(isset($this->mapedSettings['email_from']))?$this->mapedSettings['email_from']:config('mail.address'));
+                config()->set('mail.from.name',(isset($this->mapedSettings['email_name']))?$this->mapedSettings['email_name']:config('mail.from.name'));
+                config()->set('mail.encryption',(isset($this->mapedSettings['smtp_encryption']))?$this->mapedSettings['smtp_encryption']:config('mail.encryption'));
+                config()->set('mail.username',(isset($this->mapedSettings['smtp_username']))?$this->mapedSettings['smtp_username']:config('mail.username'));
+                config()->set('mail.password',(isset($this->mapedSettings['smtp_password']))?$this->mapedSettings['smtp_password']:config('mail.password'));
+                //dd(config());
 
+        }
+
+        public function sendEmail($sender = [], $view = "", $data= [])
+        {
+                try {
+                    Mail::send($view, $data, function ($message) use ($sender) {
+                $message->from(config('mail.from.address'), config('mail.from.name'));
+                $message->to(Auth::user()->email)->subject((isset($sender['subject']))?$sender['subject']:'Test Subject
+                    ');
+                });
+                    $res = [
+                        'status'=>'success',
+                        'msg'   =>'Email sent successfully, We will cantact you soon!'
+
+                    ];
+                } catch (\Exception $e) {
+                    $res = [
+                        'status'=>'error',
+                        'msg'   =>$e->getMessage()
+
+                    ];
+                }
+
+                return json_encode($res);
         }
 }

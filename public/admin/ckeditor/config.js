@@ -36,5 +36,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 
+	config.extraPlugins = 'justify';
+
+
 	config.filebrowserBrowseUrl = '/elfinder/ckeditor';
 };

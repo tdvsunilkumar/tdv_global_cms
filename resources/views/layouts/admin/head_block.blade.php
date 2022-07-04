@@ -22,6 +22,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
      <script src="{{$admin_asset_path}}ckeditor/ckeditor.js"></script>
+     
     <script type="text/javascript" src="{{$admin_asset_path}}packages/barryvdh/elfinder/js/standalonepopup.js"></script>
     <script type="text/javascript" src="{{$admin_asset_path}}packages/barryvdh/elfinder/js/elfinder.min.js"></script>
     <script type="text/javascript" src="{{$admin_asset_path}}colorbox/jquery.colorbox-min.js"></script>

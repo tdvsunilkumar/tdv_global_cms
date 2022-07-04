@@ -327,4 +327,25 @@ class PagesController extends Controller
         
         return json_encode($response);
     }
+
+    public function updateSortField (Request $request)
+    {
+        //dd($request->post());
+        $pageSectionId = $request->post('page_section_id');
+        $sortData = $request->post('sort');
+        $pageSectionObj = new PageSection;
+        try {
+            $pageSectionObj->find($pageSectionId)->update(['sort'=>$sortData]);
+            $response = [
+                'status' => 'success',
+                'msg'    => 'Sort Updated successfully!'
+            ];
+        } catch (Exception $e) {
+             $response = [
+                'status' => 'error',
+                'msg'    => $e->getMessage()
+            ];
+        }
+        return json_encode($response);
+    }
 }

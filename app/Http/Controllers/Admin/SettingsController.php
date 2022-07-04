@@ -239,7 +239,7 @@ class SettingsController extends Controller
         $dataToSave = [
             'email_from'        => $request->email_from,
             'email_name'        => $request->email_name,
-            'smtp_server'       => $request->email_name,
+            'smtp_server'       => $request->smtp_server,
             'smtp_port'         => $request->smtp_port,
             'smtp_encryption'   => $request->smtp_encryption,
             'smtp_username'     => $request->smtp_username,
