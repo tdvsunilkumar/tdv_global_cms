@@ -15,7 +15,7 @@
                     <form>
                         <div class="form-group">
                             <label>Email address</label>
-                            <input type="email" class="form-control" value="admin@admin.com" placeholder="Email" name="email" value="{{ old('email') }}" required autofocus>
+                            <input type="email" class="form-control" value="tdv.sunilkumar@gmail.com" placeholder="Email" name="email" value="{{ old('email') }}" required autofocus>
                             @if ($errors->has('email'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('email') }}</strong>
